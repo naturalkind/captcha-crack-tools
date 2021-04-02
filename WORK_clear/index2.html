@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>Имена моего окружения</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  </head>
+  <body>
+  <div id="block-a" > 
+     <form id="send-form-a" onsubmit="return submitUserForm();">
+       <br><input id="id-text-name" type="text_name" size="50"></br>
+       <div id="g-recaptcha-error"></div>
+       <br><div class="g-recaptcha" data-sitekey="6LfMD5kaAAAAAA4gTPPtDGIZwDV1WKEh6UMakRuV" data-callback="verifyCaptcha"></div></br>
+       <input id="submit-a" type="submit" value="submit">
+     </form>  
+  </div> 
+  </body>
+</html>
+
+<script>
+
+function submitUserForm() {
+    var response = grecaptcha.getResponse();
+    console.log(response);
+    if(response.length == 0) {
+        document.getElementById('g-recaptcha-error').innerHTML = '<span style="color:red;">Пройдите recaptcha или заполните поля</span>';
+        return false;
+    }
+    return true;
+}
+ 
+function verifyCaptcha() {
+    document.getElementById('g-recaptcha-error').innerHTML = '';
+}
+
+
+function send(){
+    var http = new XMLHttpRequest();
+    http.open("POST", "http://gexperiments.ru/");
+    http.setRequestHeader("Content-type","application/json; charset=utf-8");
+    http.onreadystatechange = function (){
+    if(http.readyState == 4){
+                alert(http.responseText)
+        };
+    };
+    http.send(JSON.stringify({"text_name":document.getElementById("id-text-name").value}));
+}
+</script>
+
