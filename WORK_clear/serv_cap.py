@@ -22,7 +22,13 @@ secret_key = "6LfMD5kaAAAAAHC2ixz31rYAIrBK00niW2_S5GPg"
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("index.html", title="Нейронная сеть/Тренировка")
+        self.render("base.html", title="Нейронная сеть/Тренировка")
+
+
+# Captcha non js
+class MainHandler1(tornado.web.RequestHandler):
+    def get(self):
+        self.render("index1.html", title="Нейронная сеть/Тренировка")
     def post(self):
 #        data_json = json.loads(self.request.body)
 #        print (data_json)
@@ -36,19 +42,20 @@ class MainHandler(tornado.web.RequestHandler):
         if r['success'] == False:
             self.write("Error Captcha")
 
-        
+# Captcha js        
 class MainHandler2(tornado.web.RequestHandler):
     def get(self):
         self.render("index2.html", title="Нейронная сеть/Тренировка")
     def post(self):
-        print (self.request.body)
+        print ("JS---------->",self.request.body)
         self.write(self.get_body_argument("text_surname"))
         
 
 app = tornado.web.Application([
         (r"/", MainHandler),
-        (r"/page1", MainHandler2),
-        (r"/page2", MainHandler2),
+        (r"/1", MainHandler1),
+        (r"/2", MainHandler2),
+        (r"/(robots-AI.jpg)", tornado.web.StaticFileHandler, {'path':'./'}),
     ])
     
 app.listen(8800)
@@ -56,6 +63,8 @@ app.listen(8800)
 print("Starting server...") # IP
 
 tornado.ioloop.IOLoop.current().start()
+#https://www.google.com/search?q=apple
+#g-recaptcha-response
 
 #https://github.com/search?l=Python&q=recaptcha+v2&type=Repositories
 #https://coderoad.ru/42859813/Невидимая-форма-google-Recaptcha-и-ajax
