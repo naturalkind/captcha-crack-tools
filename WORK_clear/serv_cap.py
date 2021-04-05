@@ -33,7 +33,7 @@ class MainHandler1(tornado.web.RequestHandler):
 #        data_json = json.loads(self.request.body)
 #        print (data_json)
         URL = f'https://www.google.com/recaptcha/api/siteverify?secret={secret_key}&response={self.get_body_argument("g-recaptcha-response")}'
-        
+        #"https://www.google.com/search?q=apple"
         #print (self.request.body, self.get_body_argument("text_surname"))
         r = requests.get(url = URL).json() 
         print (r, self.request.body)
@@ -56,6 +56,7 @@ app = tornado.web.Application([
         (r"/1", MainHandler1),
         (r"/2", MainHandler2),
         (r"/(robots-AI.jpg)", tornado.web.StaticFileHandler, {'path':'./'}),
+        (r"/(favicon.png)", tornado.web.StaticFileHandler, {'path':'./'}),
     ])
     
 app.listen(8800)
