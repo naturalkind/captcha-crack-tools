@@ -97,77 +97,155 @@ def cutimg(data, col):
                    pass    
 
 
-#<textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea>
-
 #https://api.ipify.org/
 if __name__ == "__main__":
         proxy = my_proxy("127.0.0.1", 9050)
         #proxy.get("http://gexperiments.ru/")
-        #proxy.get("https://www.google.com/search?keyword=rolex&upcoming=false")
+        proxy.get("https://www.google.com/search?q=putin")
         #proxy.get("https://www.cloudflare.com/")
-        proxy.get("https://www.google.com/recaptcha/api2/demo") #6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-
+        #proxy.get("https://www.google.com/recaptcha/api2/demo") #6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-
+        U = proxy.execute_script("""return window.location.href""")
         g_response = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
-        proxy.execute_script("arguments[0].style.display = 'block';arguments[0].value='32sdfgsdssadasdsadasdasdasdawd';", g_response)
-        #proxy.execute_script("arguments[0].value='32sdfgsdssadasdsadasdasdasdawd';", g_response)
+        ##------------------------------------>
+        recaptcha = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
+        data_s = recaptcha.get_attribute("data-s")
+        print (data_s)
+#        data-callback="submitCallback"
+        ##--------------------------------------->
+        #proxy.execute_script("arguments[0].setAttribute('data-callback', 'submitCallback');", recaptcha)
+        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
+                                arguments[0].addEventListener('input', (event) => { 
+                                var i = 0;
+                                while (i == 0) { 
+                                    console.log("OK");
+                                    window.stop();
+                                }
+                                });
+
+                             """, g_response)
+#                                        window.stop();
+#                                        var newDiv = document.createElement("div");
+#                                        newDiv.id = "NEWdiv";
+#                                        document.body.appendChild(newDiv);
+#                             
+                             
+        #proxy.execute_script("submitCallback = function(response) {setTimeout(function() { console.log('OK'); }, 5000); window.stop();console.log('OK');};")
+        time.sleep(10)
+        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2]) 
+        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located((By.ID, 'recaptcha-verify-button')))
+        print (EL)
+        proxy.execute_script("""
+                        element_007 = document.getElementById('recaptcha-verify-button');
+                        element_007.addEventListener('click', (event) => { 
+                        window.stop();
+                        console.log("OK");
+                        
+                        });
+                     """) 
+                     
+#        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located) #lambda x: x.find_element_by_id('NEWdiv')
         
-        #### CAPTCHA CRACK
-        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[0]) 
-        check_box = WebDriverWait(proxy, 10).until(EC.element_to_be_clickable((By.ID ,"recaptcha-anchor")))
-        time.sleep(2)
-        action =  ActionChains(proxy);
-        human_like_mouse_move(action, check_box)
-        check_box.click() 
+#        const selectElement = document.querySelector('.ice-cream');
 
-        time.sleep(2)
-        proxy.switch_to.default_content()
-        iframes = proxy.find_elements_by_tag_name("iframe")
-        proxy.switch_to.frame(iframes[2]) # Переходим к iframe
+#selectElement.addEventListener('change', (event) => {
+#  const result = document.querySelector('.result');
+#  result.textContent = `You like ${event.target.value}`;
+#});
+        
+        
+#        proxy.execute_script("window.open('');")
+#        ## END TAB ONE
+#        proxy.switch_to.window(proxy.window_handles[1])
+#        proxy.get(U)
+#        recaptcha_1 = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
+#        proxy.execute_script("arguments[0].setAttribute('data-s', arguments[1])", recaptcha_1, data_s)
+#        g_response_1 = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
+#        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
+#                                arguments[0].onchange = function() {
+#                                    document.getElementById('captcha-form').submit();
+#                                };""", g_response_1)
+#        #proxy.close()
+#        #proxy.switch_to.window(browser.window_handles[0])
+        
+        #
+        #proxy.execute_script("window.open(window.location.href);")      
+        #proxy.execute_script("document.getElementById('captcha-form').submit();")        
+        #proxy.execute_script("var submitCallback = function(response) {console.log('OK');};", g_response)
+        
+####--------------------------------------------------------------------->        
+        
+#        #### CAPTCHA CRACK
+#        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[0]) 
+#        check_box = WebDriverWait(proxy, 10).until(EC.element_to_be_clickable((By.ID ,"recaptcha-anchor")))
+#        time.sleep(2)
+#        action =  ActionChains(proxy);
+#        human_like_mouse_move(action, check_box)
+#        check_box.click() 
 
-        # Поиск ссылки на изображение, класс поиска, тип reCaptcha
-        html = proxy.page_source
-        try:
-            img_rc = proxy.find_elements_by_xpath('//img[@class="rc-image-tile-33"]')[0]
-            t_type = 3
-        except IndexError:
-            img_rc = proxy.find_elements_by_xpath('//img[@class="rc-image-tile-44"]')[0]
-            t_type = 4 
-        try:
-            required_class = proxy.find_elements_by_xpath('//div[@class="rc-imageselect-desc-no-canonical"]/strong')[0].text
-        except IndexError:
-            required_class = proxy.find_elements_by_xpath('//div[@class="rc-imageselect-desc"]/strong')[0].text
-        print (t_type)
-        print (required_class)
-        time.sleep(2)
-        answ = proxy.execute_script("""
-                function getBase64Image(img) {
-                      var canvas = document.createElement("canvas");
-                      canvas.width = img.naturalWidth;
-                      canvas.height = img.naturalHeight;
-                      var ctx = canvas.getContext("2d");
-                      ctx.drawImage(img, 0, 0);
-                      var dataURL = canvas.toDataURL("image/jpeg").substring(22);
-                      return dataURL;
-                }
-                var imgElement = document.querySelector('#rc-imageselect-target > table > tbody > tr:nth-child(2) > td:nth-child(2) > div > div.rc-image-tile-wrapper > img'); 
-                console.log(imgElement.width);
-                console.log(imgElement.naturalWidth);
-                console.log(imgElement.src);
-                var base64 = getBase64Image(imgElement);
-                return base64;""")
+#        time.sleep(2)
+#        proxy.switch_to.default_content()
+#        iframes = proxy.find_elements_by_tag_name("iframe")
+#        proxy.switch_to.frame(iframes[2]) # Переходим к iframe
 
-        nparr = np.asarray(bytearray(io.BytesIO(base64.b64decode(answ)).read()), dtype=np.uint8)
-        img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        print (img_np.shape)
-        imgs(img_np)
+#        # Поиск ссылки на изображение, класс поиска, тип reCaptcha
+#        html = proxy.page_source
+#        try:
+#            img_rc = proxy.find_elements_by_xpath('//img[@class="rc-image-tile-33"]')[0]
+#            t_type = 3
+#        except IndexError:
+#            img_rc = proxy.find_elements_by_xpath('//img[@class="rc-image-tile-44"]')[0]
+#            t_type = 4 
+#        try:
+#            required_class = proxy.find_elements_by_xpath('//div[@class="rc-imageselect-desc-no-canonical"]/strong')[0].text
+#        except IndexError:
+#            required_class = proxy.find_elements_by_xpath('//div[@class="rc-imageselect-desc"]/strong')[0].text
+#        print (t_type)
+#        print (required_class)
+#        time.sleep(2)
+#        answ = proxy.execute_script("""
+#                function getBase64Image(img) {
+#                      var canvas = document.createElement("canvas");
+#                      canvas.width = img.naturalWidth;
+#                      canvas.height = img.naturalHeight;
+#                      var ctx = canvas.getContext("2d");
+#                      ctx.drawImage(img, 0, 0);
+#                      var dataURL = canvas.toDataURL("image/jpeg").substring(22);
+#                      return dataURL;
+#                }
+#                var imgElement = document.querySelector('#rc-imageselect-target > table > tbody > tr:nth-child(2) > td:nth-child(2) > div > div.rc-image-tile-wrapper > img'); 
+#                console.log(imgElement.width);
+#                console.log(imgElement.naturalWidth);
+#                console.log(imgElement.src);
+#                var base64 = getBase64Image(imgElement);
+#                return base64;""")
+
+#        nparr = np.asarray(bytearray(io.BytesIO(base64.b64decode(answ)).read()), dtype=np.uint8)
+#        img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+#        print (img_np.shape)
+#        WebDriverWait(proxy, 300).until(lambda x: x.find_element_by_css_selector('.g-recaptcha-response'))
+#        #imgs(img_np)
         
 
 #https://rucaptcha.com/api-rucaptcha#solving_recaptchav2_new
+#https://rucaptcha.com/blog/recaptcha-google-search
 #https://rucaptcha.com/blog/obkhod-recaptcha-v2-na-stranitsakh-poiska-google
 #https://kreisfahrer.gitbooks.io/selenium-webdriver/content/webdriver_intro/ozhidaniya.html
 #https://overcoder.net/q/3867615/%D0%BF%D0%B5%D1%80%D0%B5%D1%85%D0%B2%D0%B0%D1%82%D0%B8%D1%82%D1%8C-%D0%BE%D1%82%D0%B2%D0%B5%D1%82-ajax-%D1%81-%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C%D1%8E-python-selenium-phantomjs
+#https://stackoverflow.com/questions/22172604/convert-image-url-to-base64/22172860
+#https://paveltashev.medium.com/python-and-selenium-open-focus-and-close-a-new-tab-4cc606b73388
+#https://www.lambdatest.com/blog/python-selenium-switch-tabs/
+#https://intoli.com/blog/javascript-injection/
+#https://stackoverflow.com/questions/1285917/how-to-disable-javascript-when-using-selenium
+#https://gist.github.com/2captcha/2ee70fa1130e756e1693a5d4be4d8c70
+#https://github.com/ad-m/python-anticaptcha/issues/21
+#https://www.imagetyperz.com/Forms/bypassrecaptcha_automation.aspx
 
 
-
-#<div id="recaptcha" class="g-recaptcha" data-sitekey="6LfwuyUTAAAAAOAmoS0fdqijC2PbbdH4kjq62Y1b" data-callback="submitCallback" data-s="5E45C0MBp3uvJb2-w4sbwoigf2OAyrhF_CWQ5lvfdPveN6Ui_Py7ZBLU4W5Ul-pmEAAH5qquGQ6o_yU2RPF8kQ7V-9_H_PWKHuf8iLDu-psjbvYvO_UAwdNLSvhCzucN_mmvSSnagkcgufQLbN6S7WGQj-DbuTzO8skn5ZsjKjBlsu2psOVg26AGAiMnX842WMmlpTnny3t2yMji3auCYtoynJ51HOIQ2Cp0dyMcyhrcvPMndjW4lls"><div style="width: 304px; height: 78px;"><div><iframe src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6LfwuyUTAAAAAOAmoS0fdqijC2PbbdH4kjq62Y1b&amp;co=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbTo0NDM.&amp;hl=ru&amp;v=5mNs27FP3uLBP3KBPib88r1g&amp;size=normal&amp;s=5E45C0MBp3uvJb2-w4sbwoigf2OAyrhF_CWQ5lvfdPveN6Ui_Py7ZBLU4W5Ul-pmEAAH5qquGQ6o_yU2RPF8kQ7V-9_H_PWKHuf8iLDu-psjbvYvO_UAwdNLSvhCzucN_mmvSSnagkcgufQLbN6S7WGQj-DbuTzO8skn5ZsjKjBlsu2psOVg26AGAiMnX842WMmlpTnny3t2yMji3auCYtoynJ51HOIQ2Cp0dyMcyhrcvPMndjW4lls&amp;cb=gpjlq6xy07fx" role="presentation" name="a-4i40o6b0issu" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" width="304" height="78" frameborder="0"></iframe></div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;"></iframe></div>
-#var submitCallback = function(response) {document.getElementById('captcha-form').submit();};
-
+# Вручную заменить callback
+# поменять из одной ссессию в другую
+# встраивать для перехвата js eval selenium
+# Транслировать в окне страницу гугла
+# 2 cсесии
+# в одной получаю параметры
+# в другую вставляю
+# Повесил одно событие
