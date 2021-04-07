@@ -14,7 +14,7 @@ import os
 import io
 import base64
 import scipy.interpolate as si
-
+import pickle
 
 # get a new selenium webdriver with tor as the proxy
 def my_proxy(PROXY_HOST,PROXY_PORT):
@@ -100,130 +100,58 @@ def cutimg(data, col):
 #https://api.ipify.org/
 if __name__ == "__main__":
         proxy = my_proxy("127.0.0.1", 9050)
+        
         #proxy.get("http://gexperiments.ru/")
         proxy.get("https://www.google.com/search?q=putin")
-        #proxy.get("https://www.cloudflare.com/")
-        #proxy.get("https://www.google.com/recaptcha/api2/demo") #6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-
-        U = proxy.execute_script("""return window.location.href""")
-        g_response = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
         ##------------------------------------>
+        g_response = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
         recaptcha = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
         data_s = recaptcha.get_attribute("data-s")
-        print (data_s)
+        U = proxy.execute_script("""return window.location.href""")
 #        data-callback="submitCallback"
         ##--------------------------------------->
         #proxy.execute_script("arguments[0].setAttribute('data-callback', 'submitCallback');", recaptcha)
-        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
-                                arguments[0].addEventListener('input', (event) => { 
-                                var i = 0;
-                                while (i == 0) { 
-                                    console.log("OK");
-                                    window.stop();
-                                }
-                                });
+        
+#        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
+#                                arguments[0].addEventListener('input', (event) => { 
+#                                var i = 0;
+#                                while (i == 0) { 
+#                                    console.log("OK");
+#                                    window.stop();
+#                                }
+#                                });
 
-                             """, g_response)
+#                             """, g_response)
+
+
 #                                        window.stop();
 #                                        var newDiv = document.createElement("div");
 #                                        newDiv.id = "NEWdiv";
 #                                        document.body.appendChild(newDiv);
-#                             
-                             
-        #proxy.execute_script("submitCallback = function(response) {setTimeout(function() { console.log('OK'); }, 5000); window.stop();console.log('OK');};")
-        time.sleep(10)
-        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2]) 
-        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located((By.ID, 'recaptcha-verify-button')))
-        print (EL)
-        proxy.execute_script("""
-                        var element_007 = document.getElementById('recaptcha-verify-button');
-                        element_007.addEventListener('click', (event) => { 
-                        window.stop();
-                        console.log("OK");
-                        
-                        });
-                     """) 
-                     
-#        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located) #lambda x: x.find_element_by_id('NEWdiv')
-        
-#        const selectElement = document.querySelector('.ice-cream');
-
-#selectElement.addEventListener('change', (event) => {
-#  const result = document.querySelector('.result');
-#  result.textContent = `You like ${event.target.value}`;
-#});
-        
-        
-#        proxy.execute_script("window.open('');")
-#        ## END TAB ONE
-#        proxy.switch_to.window(proxy.window_handles[1])
-#        proxy.get(U)
-#        recaptcha_1 = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
-#        proxy.execute_script("arguments[0].setAttribute('data-s', arguments[1])", recaptcha_1, data_s)
-#        g_response_1 = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
-#        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
-#                                arguments[0].onchange = function() {
-#                                    document.getElementById('captcha-form').submit();
-#                                };""", g_response_1)
-#        #proxy.close()
-#        #proxy.switch_to.window(browser.window_handles[0])
+#           
+#------------------------------------------------------------------>
+        ## END TAB ONE
+        proxy.switch_to.window(proxy.window_handles[1])
+        proxy.get(U)
+        recaptcha_1 = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
+        proxy.execute_script("arguments[0].setAttribute('data-s', arguments[1])", recaptcha_1, data_s)
+        g_response_1 = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
+        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
+                                arguments[0].onchange = function() {
+                                    document.getElementById('captcha-form').submit();
+                                };""", g_response_1)
+        #proxy.close()
+        #proxy.switch_to.window(browser.window_handles[0])
         
         #
         #proxy.execute_script("window.open(window.location.href);")      
         #proxy.execute_script("document.getElementById('captcha-form').submit();")        
         #proxy.execute_script("var submitCallback = function(response) {console.log('OK');};", g_response)
         
+        
+
 ####--------------------------------------------------------------------->        
         
-#        #### CAPTCHA CRACK
-#        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[0]) 
-#        check_box = WebDriverWait(proxy, 10).until(EC.element_to_be_clickable((By.ID ,"recaptcha-anchor")))
-#        time.sleep(2)
-#        action =  ActionChains(proxy);
-#        human_like_mouse_move(action, check_box)
-#        check_box.click() 
-
-#        time.sleep(2)
-#        proxy.switch_to.default_content()
-#        iframes = proxy.find_elements_by_tag_name("iframe")
-#        proxy.switch_to.frame(iframes[2]) # Переходим к iframe
-
-#        # Поиск ссылки на изображение, класс поиска, тип reCaptcha
-#        html = proxy.page_source
-#        try:
-#            img_rc = proxy.find_elements_by_xpath('//img[@class="rc-image-tile-33"]')[0]
-#            t_type = 3
-#        except IndexError:
-#            img_rc = proxy.find_elements_by_xpath('//img[@class="rc-image-tile-44"]')[0]
-#            t_type = 4 
-#        try:
-#            required_class = proxy.find_elements_by_xpath('//div[@class="rc-imageselect-desc-no-canonical"]/strong')[0].text
-#        except IndexError:
-#            required_class = proxy.find_elements_by_xpath('//div[@class="rc-imageselect-desc"]/strong')[0].text
-#        print (t_type)
-#        print (required_class)
-#        time.sleep(2)
-#        answ = proxy.execute_script("""
-#                function getBase64Image(img) {
-#                      var canvas = document.createElement("canvas");
-#                      canvas.width = img.naturalWidth;
-#                      canvas.height = img.naturalHeight;
-#                      var ctx = canvas.getContext("2d");
-#                      ctx.drawImage(img, 0, 0);
-#                      var dataURL = canvas.toDataURL("image/jpeg").substring(22);
-#                      return dataURL;
-#                }
-#                var imgElement = document.querySelector('#rc-imageselect-target > table > tbody > tr:nth-child(2) > td:nth-child(2) > div > div.rc-image-tile-wrapper > img'); 
-#                console.log(imgElement.width);
-#                console.log(imgElement.naturalWidth);
-#                console.log(imgElement.src);
-#                var base64 = getBase64Image(imgElement);
-#                return base64;""")
-
-#        nparr = np.asarray(bytearray(io.BytesIO(base64.b64decode(answ)).read()), dtype=np.uint8)
-#        img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-#        print (img_np.shape)
-#        WebDriverWait(proxy, 300).until(lambda x: x.find_element_by_css_selector('.g-recaptcha-response'))
-#        #imgs(img_np)
         
 
 #https://rucaptcha.com/api-rucaptcha#solving_recaptchav2_new
@@ -250,3 +178,13 @@ if __name__ == "__main__":
 # в другую вставляю
 # Повесил одно событие
 #https://www.google.com/recaptcha/api2/userverify
+# все клики которые есть на странице
+# FIERFOX после перезагрузки не очищать лог
+
+# userverify
+# Путь кнопки подтверждения капчи
+# Выследить userverify
+# #CONSENT=PENDING+162
+# TE: Trailers
+#https://stackoverflow.com/questions/15058462/how-to-save-and-load-cookies-using-python-selenium-webdriver
+#https://pypi.org/project/selenium-wire/

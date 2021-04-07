@@ -14,7 +14,7 @@ import os
 import io
 import base64
 import scipy.interpolate as si
-
+import pickle
 
 # get a new selenium webdriver with tor as the proxy
 def my_proxy(PROXY_HOST,PROXY_PORT):
@@ -100,48 +100,75 @@ def cutimg(data, col):
 #https://api.ipify.org/
 if __name__ == "__main__":
         proxy = my_proxy("127.0.0.1", 9050)
+        
         #proxy.get("http://gexperiments.ru/")
         proxy.get("https://www.google.com/search?q=putin")
+
+        
         #proxy.get("https://www.cloudflare.com/")
         #proxy.get("https://www.google.com/recaptcha/api2/demo") #6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-
-        U = proxy.execute_script("""return window.location.href""")
-        g_response = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
+        
+        #g_response = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
         ##------------------------------------>
         recaptcha = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
         data_s = recaptcha.get_attribute("data-s")
         print (data_s)
+        pickle.dump( proxy.get_cookies() , open("cookies.pkl","wb"))
+        U = proxy.execute_script("""return window.location.href""")
 #        data-callback="submitCallback"
         ##--------------------------------------->
         #proxy.execute_script("arguments[0].setAttribute('data-callback', 'submitCallback');", recaptcha)
-        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
-                                arguments[0].addEventListener('input', (event) => { 
-                                var i = 0;
-                                while (i == 0) { 
-                                    console.log("OK");
-                                    window.stop();
-                                }
-                                });
+        
+#        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
+#                                arguments[0].addEventListener('input', (event) => { 
+#                                var i = 0;
+#                                while (i == 0) { 
+#                                    console.log("OK");
+#                                    window.stop();
+#                                }
+#                                });
 
-                             """, g_response)
+#                             """, g_response)
+
+
 #                                        window.stop();
 #                                        var newDiv = document.createElement("div");
 #                                        newDiv.id = "NEWdiv";
 #                                        document.body.appendChild(newDiv);
-#                             
-                             
-        #proxy.execute_script("submitCallback = function(response) {setTimeout(function() { console.log('OK'); }, 5000); window.stop();console.log('OK');};")
-        time.sleep(10)
-        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2]) 
-        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located((By.ID, 'recaptcha-verify-button')))
-        print (EL)
-        proxy.execute_script("""
-                        var element_007 = document.getElementById('recaptcha-verify-button');
-                        element_007.addEventListener('click', (event) => { 
-                        window.stop();
-                        console.log("OK");
-                        
-                        });
-                     """) 
+#           
+#------------------------------------------------------------------>
+# START PROXY 
+        time.sleep(5)
+        proxy_2 = my_proxy("91.233.61.210", "8000")    
+        #proxy_2.header_overrides = {'TE': 'Trailers'}
+        #proxy_2.request_interceptor = {'TE': 'Trailers'}
+        proxy_2.get(U) 
+        cookies = pickle.load(open("cookies.pkl", "rb"))
+        for cookie in cookies:
+            proxy_2.add_cookie(cookie)
+                         
+        
+        #recaptcha_1 = proxy_2.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
+        #proxy_2.execute_script("arguments[0].setAttribute('data-s', arguments[1])", recaptcha_1, data_s)
+        
+#        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
+#                             """, g_response_1)                         
+#        proxy.execute_script("submitCallback = function(response) {setTimeout(function() { console.log('OK'); }, 5000); window.stop();console.log('OK');};")
+#------------------------------------------------------------------>
+
+        
+#        time.sleep(10)
+#        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2]) 
+#        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located((By.ID, 'recaptcha-verify-button')))
+#        print (EL)
+#        proxy.execute_script("""
+#                        var element_007 = document.getElementById('recaptcha-verify-button');
+#                        element_007.addEventListener('click', (event) => { 
+#                        window.stop();
+#                        console.log("OK");
+#                        
+#                        });
+#                     """) 
                      
 #        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located) #lambda x: x.find_element_by_id('NEWdiv')
         
@@ -172,6 +199,8 @@ if __name__ == "__main__":
         #proxy.execute_script("document.getElementById('captcha-form').submit();")        
         #proxy.execute_script("var submitCallback = function(response) {console.log('OK');};", g_response)
         
+        
+
 ####--------------------------------------------------------------------->        
         
 #        #### CAPTCHA CRACK
@@ -250,3 +279,13 @@ if __name__ == "__main__":
 # в другую вставляю
 # Повесил одно событие
 #https://www.google.com/recaptcha/api2/userverify
+# все клики которые есть на странице
+# FIERFOX после перезагрузки не очищать лог
+
+# userverify
+# Путь кнопки подтверждения капчи
+# Выследить userverify
+# #CONSENT=PENDING+162
+# TE: Trailers
+#https://stackoverflow.com/questions/15058462/how-to-save-and-load-cookies-using-python-selenium-webdriver
+#https://pypi.org/project/selenium-wire/
