@@ -102,27 +102,114 @@ if __name__ == "__main__":
         proxy = my_proxy("127.0.0.1", 9050)
         
         #proxy.get("http://gexperiments.ru/")
-        proxy.get("https://www.google.com/search?q=putin")
+        proxy.get("https://www.google.com/search?q=apple")
         ##------------------------------------>
         g_response = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
         recaptcha = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
         data_s = recaptcha.get_attribute("data-s")
         U = proxy.execute_script("""return window.location.href""")
+        #<form id="captcha-form" action="index" method="post">
+        form_recaptcha = proxy.find_elements_by_xpath('//form[@id="captcha-form"]')[0]
+        #proxy.execute_script("arguments[0].removeAttribute('action');arguments[0].removeAttribute('method');", form_recaptcha)
+        
 #        data-callback="submitCallback"
         ##--------------------------------------->
-        #proxy.execute_script("arguments[0].setAttribute('data-callback', 'submitCallback');", recaptcha)
+        #proxy.execute_script("arguments[0].setAttribute('data-callback', 'submitCallback_s');", recaptcha)
         
-#        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
-#                                arguments[0].addEventListener('input', (event) => { 
-#                                var i = 0;
-#                                while (i == 0) { 
-#                                    console.log("OK");
-#                                    window.stop();
-#                                }
-#                                });
+        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
+                                arguments[0].addEventListener('input', (event) => { 
+                                    console.log("OK");
+                                    window.stop();
+                                });
 
-#                             """, g_response)
+                             """, g_response)
+        # Важно вставлять скрипт в фрейм
+        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2]) 
+        time.sleep(4)          
+        proxy.execute_script("""
 
+NEW_S = document.getElementsByClassName('rc-image-tile-33');
+ for (var i = 0; i < NEW_S.length; i++) {
+  
+    
+    NEW_S[i].addEventListener("load", event => {
+            console.log(NEW_S[i]);
+        });
+    
+        NEW_S[i].addEventListener("onload", event => {
+            console.log(NEW_S[i]);
+        });
+    
+  }
+       
+                            """)  
+#        proxy.execute_script("""
+
+#    var send = XMLHttpRequest.prototype.send;
+#    xhr.prototype.send = function() {
+#       send.apply(this, arguments);
+#    };
+
+
+#    var open = XMLHttpRequest.prototype.open;
+
+#    xhr.prototype.open = function() {
+#       console.log(arguments);
+#       open.apply(this, arguments);
+#    };
+
+#})(XMLHttpRequest);
+#                             """)  
+
+
+
+
+#b</>
+#b</<
+
+#        proxy.execute_script("submitCallback = function(response) {console.log('OK_007');};", g_response)
+#        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2]) 
+#        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located((By.ID, 'recaptcha-verify-button')))
+
+
+#        proxy.execute_script("""
+
+#rk=function(F,Q,h,V,p,z,P){return P=function(){if(h.R==h){if(h.A){var G=[H,V,Q,void 0,p,z,arguments];if(2==F)var t=(v(h,G),B)(false,h,false);else if(1==F){var D=!h.S.length;v(h,G),D&&B(false,h,false)}else t=gb(G,h);return t}}}}
+#                             """) 
+#        proxy.execute_script("""
+#                        var element_007 = document.getElementById('recaptcha-verify-button');
+#                        element_007.addEventListener('click', (event) => { 
+#                                console.log("click");
+#                        });
+#                         element_007.addEventListener('change', (event) => { 
+#                                console.log("change");
+#                        });     
+#                        element_007.addEventListener('dblclick', (event) => { 
+#                                console.log("dblclick");
+#                        });   
+#                            
+#                            
+#                            var xhr = XMLHttpRequest;
+#                            var send = XMLHttpRequest.prototype.send;
+#                            xhr.prototype.send = function() {
+#                               console.log(arguments);
+#                               s.apply(this, arguments);
+#                            };
+
+#                        (function(xhr) {
+#                            var open = XMLHttpRequest.prototype.open;
+#                            xhr.prototype.open = function() {
+#                               console.log(arguments);
+#                               open.apply(this, arguments);
+#                            };
+#                            
+#                        })(XMLHttpRequest);
+#                        
+#                     """, EL) 
+                     
+#arguments[1].removeEventListener('click', this, false);
+
+                     
 
 #                                        window.stop();
 #                                        var newDiv = document.createElement("div");
@@ -131,15 +218,14 @@ if __name__ == "__main__":
 #           
 #------------------------------------------------------------------>
         ## END TAB ONE
-        proxy.switch_to.window(proxy.window_handles[1])
-        proxy.get(U)
-        recaptcha_1 = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
-        proxy.execute_script("arguments[0].setAttribute('data-s', arguments[1])", recaptcha_1, data_s)
-        g_response_1 = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
-        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
-                                arguments[0].onchange = function() {
-                                    document.getElementById('captcha-form').submit();
-                                };""", g_response_1)
+#        proxy.execute_script("window.open('');")
+#        proxy.switch_to.window(proxy.window_handles[1])
+#        proxy.get(U)
+#        recaptcha_1 = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
+#        proxy.execute_script("arguments[0].setAttribute('data-s', arguments[1])", recaptcha_1, data_s)
+#        g_response_1 = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
+#        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
+#                             """, g_response_1)
         #proxy.close()
         #proxy.switch_to.window(browser.window_handles[0])
         
@@ -167,7 +253,18 @@ if __name__ == "__main__":
 #https://gist.github.com/2captcha/2ee70fa1130e756e1693a5d4be4d8c70
 #https://github.com/ad-m/python-anticaptcha/issues/21
 #https://www.imagetyperz.com/Forms/bypassrecaptcha_automation.aspx
-
+#https://gist.github.com/sergeimuller/a609a9df7d30e2625a177123797471e2
+#https://gist.github.com/plmrry/ac0af595d41bdb3391d1e45f895fcbb6
+#https://stackoverflow.com/questions/15058462/how-to-save-and-load-cookies-using-python-selenium-webdriver
+#https://pypi.org/project/selenium-wire/
+#https://hpbn.co/xmlhttprequest/
+#https://learn.javascript.ru/fetch
+#https://saucelabs.com/blog/capture-network-traffic-with-automation-scripts
+#https://livebook.manning.com/book/progressive-web-apps/chapter-4/64
+#https://gist.github.com/wooddar/df4c89f381fa20ce819e94782dc5bc04 #Easy Python script to run selenium web workers/browsers in parallel
+#https://github.com/amiiit/e2e-test-network
+#https://github.com/derekargueta/selenium-profiler/blob/master/web_profiler.py
+#https://qna.habr.com/q/553673
 
 # Вручную заменить callback
 # поменять из одной ссессию в другую
@@ -186,5 +283,57 @@ if __name__ == "__main__":
 # Выследить userverify
 # #CONSENT=PENDING+162
 # TE: Trailers
-#https://stackoverflow.com/questions/15058462/how-to-save-and-load-cookies-using-python-selenium-webdriver
-#https://pypi.org/project/selenium-wire/
+
+
+#"""
+#function() {
+#   if (h.R == h) {
+#        if (h.A) {
+#            var G = [H, V, Q, void 0, p, z, arguments];
+#            if (2 == F) var t = (v(h, G), B)(false, h, false);
+#            else if (1 == F) {
+#                var D = !h.S.length;
+#                v(h, G), D && B(false, h, false)
+#            } else t == gb(G, h);
+#            return t
+#        }
+#        p && z && p.removeEventListener(z, P, false)
+#   }
+#}
+#((1==(L>>(4==(L+(I=[2,7,null],3)&15)&&(v=y.D()?null:k()),1)&I[1])&&(this.top=V,this.right=k,this.bottom=X,this.left=y),L^742)&15||(k=function(A){return y.call(k.src,k.listener,A)},y=Ra,v=k),I)
+#"""
+
+
+#                            var send = XMLHttpRequest.prototype.send;
+#                            xhr.prototype.send = function() {
+#                               console.log(arguments);
+#                               send.apply(this, arguments);
+#                            };
+
+#                        (function(xhr) {
+#                            var open = XMLHttpRequest.prototype.open;
+#                            xhr.prototype.open = function() {
+#                               console.log(arguments);
+#                               open.apply(this, arguments);
+#                            };
+#                            
+#                        })(XMLHttpRequest);
+
+
+
+#(function() {
+#    var origOpen = XMLHttpRequest.prototype.open;
+#    XMLHttpRequest.prototype.open = function() {
+#        console.log('request started!');
+#        this.addEventListener('load', function() {
+#            console.log('request completed!');
+#            console.log(this.readyState); //will always be 4 (ajax is completed successfully)
+#            console.log(this.responseText); //whatever the response was
+#        });
+#        origOpen.apply(this, arguments);
+#    };
+#})();       
+
+#
+
+
