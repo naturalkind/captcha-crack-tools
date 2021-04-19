@@ -1,3 +1,13 @@
+Алгоритм работы google recaptcha на странице поиска:   
+- https://www.google.com/search?q=apple GET      
+- https://www.google.com/sorry/index?continue= GET   
+................
+При нажатии кнопки я не робот:
+- https://www.google.com/recaptcha/api2/reload?k= POST (открываеться фрейм)      
+- https://www.google.com/recaptcha/api2/payload?p= GET (получает каретинку)          
+- https://www.google.com/recaptcha/api2/replaceimage?k= POST (если капча 3х3, получает новую картинку ячейки)          
+- https://www.google.com/recaptcha/api2/userverify?k= POST (подтверждает выполнение задания/переход к следующему)
+
 
 #https://rucaptcha.com/api-rucaptcha#solving_recaptchav2_new    
 #https://rucaptcha.com/blog/recaptcha-google-search    
@@ -25,3 +35,21 @@
 #https://github.com/derekargueta/selenium-profiler/blob/master/web_profiler.py   
 #https://qna.habr.com/q/553673   
 #https://github.com/derekargueta/selenium-profiler   
+
+# Вручную заменить callback
+# поменять из одной ссессию в другую
+# встраивать для перехвата js eval selenium
+# Транслировать в окне страницу гугла
+# 2 cсесии
+# в одной получаю параметры
+# в другую вставляю
+# Повесил одно событие
+#https://www.google.com/recaptcha/api2/userverify
+# все клики которые есть на странице
+# FIERFOX после перезагрузки не очищать лог
+
+# userverify
+# Путь кнопки подтверждения капчи
+# Выследить userverify
+# #CONSENT=PENDING+162
+# TE: Trailers
