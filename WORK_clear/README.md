@@ -1,7 +1,7 @@
 Алгоритм работы google recaptcha на странице поиска:   
 - https://www.google.com/search?q=apple GET      
 - https://www.google.com/sorry/index?continue= GET   
-................
+................    
 При нажатии кнопки я не робот:
 - https://www.google.com/recaptcha/api2/reload?k= POST (открываеться фрейм)      
 - https://www.google.com/recaptcha/api2/payload?p= GET (получает каретинку)          
