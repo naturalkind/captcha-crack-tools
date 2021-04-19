@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from pynput.mouse import Button, Controller
+from selenium.webdriver.common.keys import Keys
 
 import numpy as np
 import cv2
@@ -25,6 +26,7 @@ def my_proxy(PROXY_HOST,PROXY_PORT):
 
     fp.update_preferences()
     options = Options()
+    options.add_argument("-devtools")
     #options.headless = True
     #return webdriver.Firefox(executable_path="geckodriver/geckodriver", options=options, firefox_profile=fp)
     return webdriver.Firefox(options=options, firefox_profile=fp)
@@ -96,13 +98,17 @@ def cutimg(data, col):
                 except IndexError: 
                    pass    
 
-
+#51.15.197.24
 #https://api.ipify.org/
 if __name__ == "__main__":
         proxy = my_proxy("127.0.0.1", 9050)
         
         #proxy.get("http://gexperiments.ru/")
+        
         proxy.get("https://www.google.com/search?q=apple")
+#        proxy.find_element_by_tag_name('body').send_keys(Keys.CONTROL + Keys.SHIFT + 'k')
+#        A = ActionChains(proxy)
+#        A.send_keys(Keys.F12)
         ##------------------------------------>
         g_response = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
         recaptcha = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
@@ -121,30 +127,119 @@ if __name__ == "__main__":
                                     console.log("OK");
                                     window.stop();
                                 });
+                                
+            var GH = document.getElementById('captcha-form');
 
                              """, g_response)
         # Важно вставлять скрипт в фрейм
         proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2]) 
-        time.sleep(4)          
+#        time.sleep(4)
         proxy.execute_script("""
+var scripts = parent.document.getElementsByTagName("script")[2];
+scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
+console.log(scripts);
+function logSubmit(event) {
+     console.log("OK>>>>>>>>>>>>>>>");
+}   
+   
+            
+(function(xhr) {
+    var send = XMLHttpRequest.prototype.send;
+    xhr.prototype.send = function() {
+       console.log("SEND")
+            window.stop();
+            var Asd_S = parent.document.getElementsByClassName('g-recaptcha')[0]; 
+            console.log(Asd_S);
+            Asd_S.removeAttribute('data-callback');
+       send.apply(this, arguments);
+    };
 
-NEW_S = document.getElementsByClassName('rc-image-tile-33');
- for (var i = 0; i < NEW_S.length; i++) {
-  
+    var open = XMLHttpRequest.prototype.open;
+    xhr.prototype.open = function() {
+       //console.log(arguments[1].search("userverify"));
+       if ( arguments[1].search("userverify") == 16 )
+       {
+            //
+            //var GH = document.getElementById('captcha-form');
+            //var d = parent.document.getElementById('captcha-form')[0]; //getElementsByTagName("body")[0];
+            //d.removeAttribute('action');
+            //d.removeAttribute('method');
+            //console.log("STOP");
+            //submitCallback = function(response) {document.getElementById('captcha-form').submit();}
+            
+            var Asd_S = parent.document.getElementsByClassName('g-recaptcha')[0]; 
+            console.log(Asd_S);
+            Asd_S.removeAttribute('data-callback');
     
-    NEW_S[i].addEventListener("load", event => {
-            console.log(NEW_S[i]);
-        });
-    
-        NEW_S[i].addEventListener("onload", event => {
-            console.log(NEW_S[i]);
-        });
-    
-  }
+            
+            window.stop();
+            var d = parent.document.getElementById('captcha-form'); //getElementsByTagName("body")[0];
+            d.removeAttribute('action');
+            d.removeAttribute('method');
+            console.log("STOP", d);
+            d.addEventListener('submit', logSubmit);
+       };
+       
+       open.apply(this, arguments);
+    };
+
+})(XMLHttpRequest);     
+     
        
                             """)  
+        
+        
+                  
 #        proxy.execute_script("""
 
+#function reDIV() {
+#NEW_S = document.getElementsByClassName('rc-imageselect-tile');
+# for (var i = 0; i < NEW_S.length; i++) {
+#    //console.log(NEW_S[i]);
+#    
+#    NEW_S[i].addEventListener("click", event => {
+#            //console.log(this);
+#        });
+#    
+#    
+#  }
+#}  
+#(function(xhr) {
+#    var send = XMLHttpRequest.prototype.send;
+#    xhr.prototype.send = function() {
+#       //console.log("SEND")
+#       send.apply(this, arguments);
+#       
+#    };
+
+
+#    var open = XMLHttpRequest.prototype.open;
+
+#    xhr.prototype.open = function() {
+#       //console.log(arguments[1].search("userverify"));
+#       if ( arguments[1].search("userverify") == 16 )
+#       {
+#            window.stop();
+#            
+#            document.getElementById('captcha-form').removeAttribute('action');arguments[0].removeAttribute('method');
+#            console.log("STOP");
+#       };
+#       open.apply(this, arguments);
+#       reDIV();
+#    };
+
+#})(XMLHttpRequest);     
+#     
+#       
+#                            """)  
+                            
+                            
+#        proxy.execute_script("""
+
+#        NEW_S[i].addEventListener("onload", event => {
+#            console.log(NEW_S[i]);
+#        });
+#(function(xhr) {
 #    var send = XMLHttpRequest.prototype.send;
 #    xhr.prototype.send = function() {
 #       send.apply(this, arguments);
@@ -265,6 +360,8 @@ NEW_S = document.getElementsByClassName('rc-image-tile-33');
 #https://github.com/amiiit/e2e-test-network
 #https://github.com/derekargueta/selenium-profiler/blob/master/web_profiler.py
 #https://qna.habr.com/q/553673
+#https://github.com/derekargueta/selenium-profiler
+
 
 # Вручную заменить callback
 # поменять из одной ссессию в другую
