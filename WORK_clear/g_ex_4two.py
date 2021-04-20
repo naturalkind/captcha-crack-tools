@@ -116,10 +116,29 @@ if __name__ == "__main__":
         data_s = recaptcha.get_attribute("data-s")
         U = proxy.execute_script("""return window.location.href""")
         #<form id="captcha-form" action="index" method="post">
-        form_recaptcha = proxy.find_elements_by_xpath('//form[@id="captcha-form"]')[0]
-        #proxy.execute_script("arguments[0].removeAttribute('action');arguments[0].removeAttribute('method');", form_recaptcha)
         
-#        data-callback="submitCallback"
+        #form_recaptcha = proxy.find_elements_by_xpath('//form[@id="captcha-form"]')[0]
+        
+        #proxy.execute_script("arguments[0].removeAttribute('action');arguments[0].removeAttribute('method');", form_recaptcha)
+        ##---------------------------------------------->
+        ## END TAB ONE
+        proxy.execute_script("window.open('');")
+        proxy.switch_to.window(proxy.window_handles[1])
+        proxy.get(U)
+        recaptcha_1 = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
+        proxy.execute_script("arguments[0].setAttribute('data-s', arguments[1])", recaptcha_1, data_s)
+        g_response_1 = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
+#        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
+#                             """, g_response_1)
+        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
+                                arguments[0].addEventListener('input', (event) => { 
+                                    console.log("OK INPUT");
+                                    submitCallback();
+                                });""", g_response_1)
+        #proxy.close()
+        proxy.switch_to.window(proxy.window_handles[0])
+        
+        
         ##--------------------------------------->
         #proxy.execute_script("arguments[0].setAttribute('data-callback', 'submitCallback_s');", recaptcha)
         
@@ -167,80 +186,6 @@ parent.window.onbeforeunload = (event) => {
         #EL.send_keys(Keys.CONTROL +'Escape')
         proxy.set_page_load_timeout(100)
         proxy.execute_script("window.stop();")
-#        A = ActionChains(EL)
-#        A.send_keys(Keys.CONTROL +'Escape')
-
-
-#parent.window.onbeforeunload = function (e) {
-#    e = e || parent.window.event;
-#    console.log("OK onbeforeunload");
-#    parent.window.stop();
-#    window.stop();
-#};        
-#                            """)  
-
-
-
-
-
-#        proxy.execute_script("""
-#var scripts = parent.document.getElementsByTagName("script")[2];
-#scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
-#console.log(scripts);
-
-#function logSubmit(event) {
-#     console.log("OK>>>>>>>>>>>>>>>");
-#}   
-#   
-#            
-#(function(xhr) {
-#    var send = XMLHttpRequest.prototype.send;
-#    xhr.prototype.send = function() {
-#       console.log("SEND")
-#            parent.window.stop();
-#            var Asd_S = parent.document.getElementsByClassName('g-recaptcha')[0]; 
-#            console.log(Asd_S);
-#            Asd_S.removeAttribute('data-callback');
-#       send.apply(this, arguments);
-#       //----------------->
-#       var scripts = parent.document.getElementsByTagName("script")[2];
-#       scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
-#       //----------------->
-#    };
-
-#    var open = XMLHttpRequest.prototype.open;
-#    xhr.prototype.open = function() {
-#       if ( arguments[1].search("userverify") == 16 )
-#       {
-#            //submitCallback = function(response) {document.getElementById('captcha-form').submit();}
-#            
-#            var Asd_S = parent.document.getElementsByClassName('g-recaptcha')[0]; 
-#            console.log(Asd_S);
-#            Asd_S.removeAttribute('data-callback');
-#    
-#            
-#            parent.window.stop();
-#            var d = parent.document.getElementById('captcha-form'); //getElementsByTagName("body")[0];
-#            d.removeAttribute('action');
-#            d.removeAttribute('method');
-#            console.log("STOP", d);
-#            d.addEventListener('submit', logSubmit);
-#            //----------------------->
-#            var scripts = parent.document.getElementsByTagName("script")[2];
-#            scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
-#            //----------------------->
-#            
-#            
-#       };
-#       
-#       open.apply(this, arguments);
-#    };
-
-#})(XMLHttpRequest);     
-#     
-#       
-#                            """)  
-
 
 #           
 #------------------------------------------------------------------>
