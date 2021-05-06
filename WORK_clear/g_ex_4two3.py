@@ -106,23 +106,18 @@ if __name__ == "__main__":
         #proxy = my_proxy("91.233.61.210", "8000")
         #proxy.get("http://gexperiments.ru/")
         
-        proxy.get("https://www.google.com/search?q=apple")
+        proxy.get("https://www.google.com/search?q=yom hanks")
         ##------------------------------------>
         g_response = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
         recaptcha = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
         data_s = recaptcha.get_attribute("data-s")
         U = proxy.execute_script("""return window.location.href""")
         #<form id="captcha-form" action="index" method="post">
-        
         #form_recaptcha = proxy.find_elements_by_xpath('//form[@id="captcha-form"]')[0]
-        
         #proxy.execute_script("arguments[0].removeAttribute('action');arguments[0].removeAttribute('method');", form_recaptcha)
-        ##---------------------------------------------->
-        
-        ##--------------------------------------->
         #proxy.execute_script("arguments[0].setAttribute('data-callback', 'submitCallback_s');", recaptcha)
-        
-        proxy.execute_script("""arguments[0].style.display = 'block';//arguments[0].value='';
+        ##---------------------------------------------->
+        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='START';
                                 arguments[0].addEventListener('input', (event) => { 
                                     console.log("OK INPUT");
                                     document.getElementById('captcha-form').submit();
@@ -139,91 +134,63 @@ if __name__ == "__main__":
         g_response_1 = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
 #        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
 #                             """, g_response_1)
-        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='';
+        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='AAAAAAAAAA';
                                 arguments[0].addEventListener('input', (event) => { 
                                     console.log("OK INPUT");
                                     //submitCallback();
                                     
                                 });""", g_response_1)
+#---------------------------------------->
         #proxy.close()
         #proxy.switch_to.window(proxy.window_handles[0])
         # Важно вставлять скрипт в фрейм
-        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2]) 
-#        time.sleep(4)
-        proxy.execute_script("""
-//var scripts = parent.document.getElementsByTagName("script")[2];
-//scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
-//console.log(scripts);
-//parent.window.location.reload();   
-parent.window.onunload = function (e) {
-    e = e || parent.window.event;
-    if(e.returnValue){
-        console.log("ONUNLOAD"); 
-        window.onbeforeunload = (event) => {
-              const e = event || parent.window.event;
-              // Cancel the event
-                console.log("onbeforeunload")
-                var newDiv = document.createElement("div");
-                newDiv.id = "div_stop_new";
-                parent.document.body.appendChild(newDiv);
-                //parent.window.stop();
-                //window.stop();
-            };
-        
-        
-        
-        
-    }
-};
-    
-parent.window.onbeforeunload = (event) => {
-  const e = event || parent.window.event;
-  // Cancel the event
-    console.log("onbeforeunload")
-    var newDiv = document.createElement("div");
-    newDiv.id = "div_stop_new";
-    parent.document.body.appendChild(newDiv);
-    //parent.window.stop();
-    //window.stop();
-};
-        """)
-        proxy.switch_to.window(proxy.window_handles[1])
-#        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located((By.ID, 'div_stop_new')))
-        EL = WebDriverWait(proxy, 3000).until(EC.presence_of_element_located((By.ID, 'div_stop_new')))
-        print (EL, "STOP")
-        #EL.send_keys(Keys.CONTROL +'Escape')
-        #proxy.set_page_load_timeout(100)
-        proxy.execute_script("window.stop();")
-       
+#        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2]) 
+##        time.sleep(4)
+#        proxy.execute_script("""
+#//var scripts = parent.document.getElementsByTagName("script")[2];
+#//scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
+#//console.log(scripts);
+#//parent.window.location.reload();   
+#parent.window.onunload = function (e) {
+#    e = e || parent.window.event;
+#    if(e.returnValue){
+#        console.log("ONUNLOAD"); 
+#        window.onbeforeunload = (event) => {
+#              const e = event || parent.window.event;
+#              // Cancel the event
+#                console.log("onbeforeunload")
+#                var newDiv = document.createElement("div");
+#                newDiv.id = "div_stop_new";
+#                parent.document.body.appendChild(newDiv);
+#                //parent.window.stop();
+#                //window.stop();
+#            };
+#        
+#        
+#        
+#        
+#    }
+#};
+#var OL = document.getElementsByClassName('g-recaptcha-response');
+#console.log(parent.document);
+#parent.window.onbeforeunload = (event) => {
+#  const e = event || parent.window.event;
+#  // Cancel the event
+#    console.log("onbeforeunload");
+#    var newDiv = document.createElement("div");
+#    newDiv.id = "div_stop_new";
+#    parent.document.body.appendChild(newDiv);
+#    //parent.window.stop();
+#    //window.stop();
+#};
+#        """)
+#        proxy.switch_to.window(proxy.window_handles[0])
+##        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located((By.ID, 'div_stop_new')))
+#        EL = WebDriverWait(proxy, 3000).until(EC.presence_of_element_located((By.ID, 'div_stop_new')))
+#        VG = proxy.execute_script("return document.getElementsByClassName('g-recaptcha-response').value")
+#        print (EL, "STOP")
+#        #EL.send_keys(Keys.CONTROL +'Escape')
+#        #proxy.set_page_load_timeout(100)
+#        proxy.execute_script("window.stop();")
+#        print (VG)
 #------------------------------------------------------------------>
-        ## END TAB ONE
-#        proxy.execute_script("window.open('');")
-#        proxy.switch_to.window(proxy.window_handles[1])
-#        proxy.get(U)
-#        recaptcha_1 = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
-#        proxy.execute_script("arguments[0].setAttribute('data-s', arguments[1])", recaptcha_1, data_s)
-#        g_response_1 = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
-#        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
-#                             """, g_response_1)
-        #proxy.close()
-        #proxy.switch_to.window(browser.window_handles[0])
-        
-        #
-        #proxy.execute_script("window.open(window.location.href);")      
-        #proxy.execute_script("document.getElementById('captcha-form').submit();")        
-        #proxy.execute_script("var submitCallback = function(response) {console.log('OK');};", g_response)
-        
-        
-
-####--------------------------------------------------------------------->        
-#https://gist.github.com/Tomas2D/ed9e0a5ff196704d205b2fbd3a9880f6        
-#https://github.com/ad-m/python-anticaptcha
-#https://gist.github.com/2captcha/2ee70fa1130e756e1693a5d4be4d8c70
-#https://github.com/derekargueta/selenium-profiler/blob/master/web_profiler.py
-#https://dev.to/eons/detect-page-refresh-tab-close-and-route-change-with-react-router-v5-3pd
-#https://www.testim.io/blog/how-to-wait-for-a-page-to-load-in-selenium/
-#https://developer.mozilla.org/ru/docs/Web/API/Event/preventDefault
-#https://developer.mozilla.org/en-US/docs/Web/API/Window/captureEvents
-#https://developer.mozilla.org/ru/docs/Web/API/Window
-#https://github.com/miyakogi/pyppeteer
-#https://github.com/HDE/arsenic

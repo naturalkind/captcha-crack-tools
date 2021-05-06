@@ -99,6 +99,37 @@ def cutimg(data, col):
                 except IndexError: 
                    pass    
 
+def CR(x):
+        y = proxy.execute_script("""
+var NS = "div_stop_new_"+arguments[0];
+
+parent.window.onunload = function (e) {
+    e = e || parent.window.event;
+    if(e.returnValue){
+        console.log("ONUNLOAD"); 
+        var newDiv = document.createElement("div");
+        newDiv.id = NS;
+        parent.document.body.appendChild(newDiv);
+    }
+};
+
+
+parent.window.onbeforeunload = (event) => {
+  const e = event || parent.window.event;
+  // Cancel the event
+    console.log("onbeforeunload")
+    var newDiv = document.createElement("div");
+    newDiv.id = NS;
+    parent.document.body.appendChild(newDiv);
+};
+return arguments[0];
+        """, x)
+        print (f'div_stop_new_{x}')
+        proxy.switch_to.window(proxy.window_handles[0])
+#        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located((By.ID, 'div_stop_new')))
+        EL = WebDriverWait(proxy, 3000).until(EC.presence_of_element_located((By.ID, f'div_stop_new_{x}')))
+        print (EL, "STOP")
+        CR(x+1)
 #51.15.197.24
 #https://api.ipify.org/
 if __name__ == "__main__":
@@ -107,94 +138,122 @@ if __name__ == "__main__":
         #proxy.get("http://gexperiments.ru/")
         
         proxy.get("https://www.google.com/search?q=apple")
+#        proxy.find_element_by_tag_name('body').send_keys(Keys.CONTROL + Keys.SHIFT + 'k')
+#        A = ActionChains(proxy)
+#        A.send_keys(Keys.F12)
         ##------------------------------------>
         g_response = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
         recaptcha = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
         data_s = recaptcha.get_attribute("data-s")
         U = proxy.execute_script("""return window.location.href""")
         #<form id="captcha-form" action="index" method="post">
-        
-        #form_recaptcha = proxy.find_elements_by_xpath('//form[@id="captcha-form"]')[0]
-        
+        form_recaptcha = proxy.find_elements_by_xpath('//form[@id="captcha-form"]')[0]
         #proxy.execute_script("arguments[0].removeAttribute('action');arguments[0].removeAttribute('method');", form_recaptcha)
-        ##---------------------------------------------->
         
+#        data-callback="submitCallback"
         ##--------------------------------------->
         #proxy.execute_script("arguments[0].setAttribute('data-callback', 'submitCallback_s');", recaptcha)
         
-        proxy.execute_script("""arguments[0].style.display = 'block';//arguments[0].value='';
+        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
                                 arguments[0].addEventListener('input', (event) => { 
                                     console.log("OK INPUT");
-                                    document.getElementById('captcha-form').submit();
+                                    //parent.window.stop(); 
                                 });
+                  
+                 //parent.window.location.reload();
+                 
                                 
+            //var GH = document.getElementById('captcha-form');
                              """, g_response)
-#    
-        ## END TAB ONE
-        proxy.execute_script("window.open('');")
-        proxy.switch_to.window(proxy.window_handles[1])
-        proxy.get(U)
-        recaptcha_1 = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
-        proxy.execute_script("arguments[0].setAttribute('data-s', arguments[1])", recaptcha_1, data_s)
-        g_response_1 = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
-#        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
-#                             """, g_response_1)
-        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='';
-                                arguments[0].addEventListener('input', (event) => { 
-                                    console.log("OK INPUT");
-                                    //submitCallback();
-                                    
-                                });""", g_response_1)
-        #proxy.close()
-        #proxy.switch_to.window(proxy.window_handles[0])
         # Важно вставлять скрипт в фрейм
         proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2]) 
 #        time.sleep(4)
-        proxy.execute_script("""
-//var scripts = parent.document.getElementsByTagName("script")[2];
-//scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
-//console.log(scripts);
-//parent.window.location.reload();   
-parent.window.onunload = function (e) {
-    e = e || parent.window.event;
-    if(e.returnValue){
-        console.log("ONUNLOAD"); 
-        window.onbeforeunload = (event) => {
-              const e = event || parent.window.event;
-              // Cancel the event
-                console.log("onbeforeunload")
-                var newDiv = document.createElement("div");
-                newDiv.id = "div_stop_new";
-                parent.document.body.appendChild(newDiv);
-                //parent.window.stop();
-                //window.stop();
-            };
+        CR(0)        
         
-        
-        
-        
-    }
-};
-    
-parent.window.onbeforeunload = (event) => {
-  const e = event || parent.window.event;
-  // Cancel the event
-    console.log("onbeforeunload")
-    var newDiv = document.createElement("div");
-    newDiv.id = "div_stop_new";
-    parent.document.body.appendChild(newDiv);
-    //parent.window.stop();
-    //window.stop();
-};
-        """)
-        proxy.switch_to.window(proxy.window_handles[1])
-#        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located((By.ID, 'div_stop_new')))
-        EL = WebDriverWait(proxy, 3000).until(EC.presence_of_element_located((By.ID, 'div_stop_new')))
-        print (EL, "STOP")
-        #EL.send_keys(Keys.CONTROL +'Escape')
-        #proxy.set_page_load_timeout(100)
-        proxy.execute_script("window.stop();")
-       
+        #proxy.execute_script("window.stop();")
+#        A = ActionChains(EL)
+#        A.send_keys(Keys.CONTROL +'Escape')
+
+
+#parent.window.onbeforeunload = function (e) {
+#    e = e || parent.window.event;
+#    console.log("OK onbeforeunload");
+#    parent.window.stop();
+#    window.stop();
+#};        
+#                            """)  
+
+#https://www.google.com/search?q=apple&google_abuse=GOOGLE_ABUSE_EXEMPTION=ID=df573b16c8ebba25:TM=1618935374:C=r:IP=104.244.72.36-:S=APGng0uuy6G5iKkognhQcSE_8pjJbLFQ8A; path=/; domain=google.com; expires=Tue, 20-Apr-2021 19:16:14 GMT
+
+# 1
+#https://www.google.com/sorry/index
+# 2
+#https://www.google.com/search?q=apple&google_abuse=GOOGLE_ABUSE_EXEMPTION=ID=a873054dfc6fbf85:TM=1618936810:C=r:IP=199.195.254.81-:S=APGng0smdvNEwsk0eAiNCMsqZv7Vp4J_sA; path=/; domain=google.com; expires=Tue, 20-Apr-2021 19:40:10 GMT
+# 3
+#https://www.google.com/search?q=apple
+# 4
+
+
+#        proxy.execute_script("""
+#var scripts = parent.document.getElementsByTagName("script")[2];
+#scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
+#console.log(scripts);
+
+#function logSubmit(event) {
+#     console.log("OK>>>>>>>>>>>>>>>");
+#}   
+#   
+#            
+#(function(xhr) {
+#    var send = XMLHttpRequest.prototype.send;
+#    xhr.prototype.send = function() {
+#       console.log("SEND")
+#            parent.window.stop();
+#            var Asd_S = parent.document.getElementsByClassName('g-recaptcha')[0]; 
+#            console.log(Asd_S);
+#            Asd_S.removeAttribute('data-callback');
+#       send.apply(this, arguments);
+#       //----------------->
+#       var scripts = parent.document.getElementsByTagName("script")[2];
+#       scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
+#       //----------------->
+#    };
+
+#    var open = XMLHttpRequest.prototype.open;
+#    xhr.prototype.open = function() {
+#       if ( arguments[1].search("userverify") == 16 )
+#       {
+#            //submitCallback = function(response) {document.getElementById('captcha-form').submit();}
+#            
+#            var Asd_S = parent.document.getElementsByClassName('g-recaptcha')[0]; 
+#            console.log(Asd_S);
+#            Asd_S.removeAttribute('data-callback');
+#    
+#            
+#            parent.window.stop();
+#            var d = parent.document.getElementById('captcha-form'); //getElementsByTagName("body")[0];
+#            d.removeAttribute('action');
+#            d.removeAttribute('method');
+#            console.log("STOP", d);
+#            d.addEventListener('submit', logSubmit);
+#            //----------------------->
+#            var scripts = parent.document.getElementsByTagName("script")[2];
+#            scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
+#            //----------------------->
+#            
+#            
+#       };
+#       
+#       open.apply(this, arguments);
+#    };
+
+#})(XMLHttpRequest);     
+#     
+#       
+#                            """)  
+
+
+#           
 #------------------------------------------------------------------>
         ## END TAB ONE
 #        proxy.execute_script("window.open('');")

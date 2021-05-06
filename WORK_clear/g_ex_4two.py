@@ -103,10 +103,10 @@ def cutimg(data, col):
 #https://api.ipify.org/
 if __name__ == "__main__":
         proxy = my_proxy("127.0.0.1", 9050)
-        
+        #proxy = my_proxy("91.233.61.210", "8000")
         #proxy.get("http://gexperiments.ru/")
         
-        proxy.get("https://www.google.com/search?q=apple")
+        proxy.get("https://www.google.com/search?q=suzuki")
 #        proxy.find_element_by_tag_name('body').send_keys(Keys.CONTROL + Keys.SHIFT + 'k')
 #        A = ActionChains(proxy)
 #        A.send_keys(Keys.F12)
@@ -133,7 +133,8 @@ if __name__ == "__main__":
         proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
                                 arguments[0].addEventListener('input', (event) => { 
                                     console.log("OK INPUT");
-                                    submitCallback();
+                                    //submitCallback();
+                                    document.getElementById('captcha-form').submit();
                                 });""", g_response_1)
         #proxy.close()
         proxy.switch_to.window(proxy.window_handles[0])
@@ -157,9 +158,9 @@ if __name__ == "__main__":
         proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2]) 
 #        time.sleep(4)
         proxy.execute_script("""
-var scripts = parent.document.getElementsByTagName("script")[2];
-scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
-console.log(scripts);
+//var scripts = parent.document.getElementsByTagName("script")[2];
+//scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
+//console.log(scripts);
 //parent.window.location.reload();   
 parent.window.onunload = function (e) {
     e = e || parent.window.event;
@@ -175,8 +176,8 @@ parent.window.onbeforeunload = (event) => {
     var newDiv = document.createElement("div");
     newDiv.id = "div_stop_new";
     parent.document.body.appendChild(newDiv);
-    parent.window.stop();
-    window.stop();
+    //parent.window.stop();
+    //window.stop();
 };
         """)
         proxy.switch_to.window(proxy.window_handles[0])

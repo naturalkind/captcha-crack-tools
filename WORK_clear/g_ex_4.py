@@ -103,7 +103,7 @@ def cutimg(data, col):
 #https://api.ipify.org/
 if __name__ == "__main__":
         proxy = my_proxy("127.0.0.1", 9050)
-        
+        #proxy = my_proxy("91.233.61.210", "8000")
         #proxy.get("http://gexperiments.ru/")
         
         proxy.get("https://www.google.com/search?q=apple")
@@ -138,9 +138,9 @@ if __name__ == "__main__":
         proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2]) 
 #        time.sleep(4)
         proxy.execute_script("""
-var scripts = parent.document.getElementsByTagName("script")[2];
-scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
-console.log(scripts);
+//var scripts = parent.document.getElementsByTagName("script")[2];
+//scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
+//console.log(scripts);
 //parent.window.location.reload();   
 parent.window.onunload = function (e) {
     e = e || parent.window.event;
@@ -166,7 +166,7 @@ parent.window.onbeforeunload = (event) => {
         print (EL, "STOP")
         #EL.send_keys(Keys.CONTROL +'Escape')
         proxy.set_page_load_timeout(100)
-        proxy.execute_script("window.stop();")
+        #proxy.execute_script("window.stop();")
 #        A = ActionChains(EL)
 #        A.send_keys(Keys.CONTROL +'Escape')
 
@@ -179,7 +179,7 @@ parent.window.onbeforeunload = (event) => {
 #};        
 #                            """)  
 
-
+#https://www.google.com/search?q=apple&google_abuse=GOOGLE_ABUSE_EXEMPTION=ID=df573b16c8ebba25:TM=1618935374:C=r:IP=104.244.72.36-:S=APGng0uuy6G5iKkognhQcSE_8pjJbLFQ8A; path=/; domain=google.com; expires=Tue, 20-Apr-2021 19:16:14 GMT
 
 
 

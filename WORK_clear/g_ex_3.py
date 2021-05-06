@@ -152,6 +152,8 @@ function logSubmit(event) {
             console.log(Asd_S);
             Asd_S.removeAttribute('data-callback');
        send.apply(this, arguments);
+       var scripts = parent.document.getElementsByTagName("script")[2];
+       scripts.innerHTML = "var submitCallback = function(response) {console.log(response);};";
     };
 
     var open = XMLHttpRequest.prototype.open;
@@ -176,6 +178,7 @@ function logSubmit(event) {
             var d = parent.document.getElementById('captcha-form'); //getElementsByTagName("body")[0];
             d.removeAttribute('action');
             d.removeAttribute('method');
+            d.setAttribute('onsubmit', 'return false;')
             console.log("STOP", d);
             d.addEventListener('submit', logSubmit);
        };
@@ -322,7 +325,7 @@ function logSubmit(event) {
 #        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
 #                             """, g_response_1)
         #proxy.close()
-        #proxy.switch_to.window(browser.window_handles[0])
+        #proxy.switch_to.window(proxy.window_handles[0])
         
         #
         #proxy.execute_script("window.open(window.location.href);")      
