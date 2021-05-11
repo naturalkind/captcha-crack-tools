@@ -1,3 +1,0 @@
-#!/bin/bash
-
-sudo nohup python3 svup.py > out.txt &
