@@ -1,0 +1,22 @@
+1620734901705	geckodriver	INFO	Listening on 127.0.0.1:36917
+1620734901711	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-devtools" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileBFEoce"
+1620734902090	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1620734904206	Marionette	INFO	Listening on port 34773
+1620734904242	Marionette	WARN	TLS certificate errors will be ignored for this session
+IPDL protocol error: Handler returned error code!
+
+###!!! [Parent][DispatchAsyncMessage] Error: PLayerTransaction::Msg_ReleaseLayer Processing error: message was deserialized, but the handler returned false (indicating failure)
+
+IPDL protocol error: Handler returned error code!
+
+###!!! [Parent][DispatchAsyncMessage] Error: PLayerTransaction::Msg_ReleaseLayer Processing error: message was deserialized, but the handler returned false (indicating failure)
+
+IPDL protocol error: Handler returned error code!
+
+###!!! [Parent][DispatchAsyncMessage] Error: PLayerTransaction::Msg_ReleaseLayer Processing error: message was deserialized, but the handler returned false (indicating failure)
+
+1620734928122	Marionette	INFO	Stopped listening on port 34773
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
