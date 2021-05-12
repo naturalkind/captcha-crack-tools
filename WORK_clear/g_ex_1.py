@@ -101,47 +101,81 @@ def cutimg(data, col):
 if __name__ == "__main__":
         proxy = my_proxy("127.0.0.1", 9050)
         #proxy.get("http://gexperiments.ru/")
-        proxy.get("https://www.google.com/search?q=putin")
+        #proxy.get("https://www.google.com/search?q=putin")
         #proxy.get("https://www.cloudflare.com/")
-        #proxy.get("https://www.google.com/recaptcha/api2/demo") #6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-
+        proxy.get("https://www.google.com/recaptcha/api2/demo") #6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-
         U = proxy.execute_script("""return window.location.href""")
         g_response = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
         ##------------------------------------>
         recaptcha = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
         data_s = recaptcha.get_attribute("data-s")
-        print (data_s)
+        print ("DATA S", data_s)
 #        data-callback="submitCallback"
         ##--------------------------------------->
         #proxy.execute_script("arguments[0].setAttribute('data-callback', 'submitCallback');", recaptcha)
         proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
-                                arguments[0].addEventListener('input', (event) => { 
-                                var i = 0;
-                                while (i == 0) { 
-                                    console.log("OK");
-                                    window.stop();
-                                }
-                                });
-
                              """, g_response)
-#                                        window.stop();
-#                                        var newDiv = document.createElement("div");
-#                                        newDiv.id = "NEWdiv";
-#                                        document.body.appendChild(newDiv);
-#                             
                              
-        #proxy.execute_script("submitCallback = function(response) {setTimeout(function() { console.log('OK'); }, 5000); window.stop();console.log('OK');};")
-        time.sleep(10)
-        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2]) 
-        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located((By.ID, 'recaptcha-verify-button')))
-        print (EL)
+        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2])                       
         proxy.execute_script("""
-                        var element_007 = document.getElementById('recaptcha-verify-button');
-                        element_007.addEventListener('click', (event) => { 
-                        window.stop();
-                        console.log("OK");
-                        
-                        });
-                     """) 
+(function(xhr) {
+    var send = XMLHttpRequest.prototype.send;
+    xhr.prototype.send = function() {
+       //console.log("SEND", arguments);
+       send.apply(this, arguments);
+       
+       var performance = window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {};
+       console.log(performance.getEntries() || {});
+       
+       
+       
+    };
+
+    var open = XMLHttpRequest.prototype.open;
+    xhr.prototype.open = function() {
+        if ( arguments[1].search("userverify") == 16 ) {
+                var newDiv = document.createElement("div");
+                newDiv.id = "div_stop_new";
+                parent.document.body.appendChild(newDiv);
+                //console.log("OPEN", arguments);
+       };
+       
+       open.apply(this, arguments);
+    };
+
+})(XMLHttpRequest);
+                    console.log("load script")
+                    
+                       //var performance = window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {};
+                       //console.log(performance.getEntries() || {});
+                    
+                    """)   
+        proxy.switch_to.default_content()                                          
+        print (proxy.find_elements_by_tag_name("iframe")) 
+        EL = WebDriverWait(proxy, 3000).until(EC.presence_of_element_located((By.ID, 'div_stop_new')))
+        time.sleep(5)
+        VG = proxy.execute_script("""var OPR = parent.document.getElementById('g-recaptcha-response'); 
+                                         return OPR.value""") 
+                                     
+        print (VG)       
+        #                   
+#        check_box = WebDriverWait(proxy, 100).until(EC.element_to_be_clickable((By.ID ,"recaptcha-anchor")))
+#        action =  ActionChains(proxy);
+#        human_like_mouse_move(action, check_box)
+#        check_box.click()
+
+        #time.sleep(5)
+#        proxy.switch_to.frame([1])
+
+         
+#        proxy.execute_script("""
+#                        var element_007 = document.getElementById('recaptcha-verify-button');
+#                        element_007.addEventListener('click', (event) => { 
+#                        window.stop();
+#                        console.log("OK");
+#                        
+#                        });
+#                     """) 
                      
 #        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located) #lambda x: x.find_element_by_id('NEWdiv')
         
@@ -153,24 +187,74 @@ if __name__ == "__main__":
 #});
         
         
-#        proxy.execute_script("window.open('');")
+#        proxy.execute_script(f"window.open('');")#{U}
 #        ## END TAB ONE
 #        proxy.switch_to.window(proxy.window_handles[1])
 #        proxy.get(U)
+##        proxy.execute_script("""
+##parent.window.onbeforeunload = (event) => {
+##  const e = event || parent.window.event;
+##    // Cancel the event
+##    console.log("onbeforeunload");
+##    var newDiv = document.createElement("div");
+##    newDiv.id = "div_stop_new";
+##    parent.document.body.appendChild(newDiv);
+##};
+
+##        """)
+#      
 #        recaptcha_1 = proxy.find_elements_by_xpath('//div[@class="g-recaptcha"]')[0]
 #        proxy.execute_script("arguments[0].setAttribute('data-s', arguments[1])", recaptcha_1, data_s)
 #        g_response_1 = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
-#        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='..................................';
-#                                arguments[0].onchange = function() {
-#                                    document.getElementById('captcha-form').submit();
-#                                };""", g_response_1)
+#        proxy.execute_script("""arguments[0].style.display = 'block';arguments[0].value='>>>>>>>>>>>>>>>';
+#                             """, g_response_1)
+#         
+#        #func_1(proxy) 
+#        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[0]) 
+#        check_box = WebDriverWait(proxy, 100).until(EC.element_to_be_clickable((By.ID ,"recaptcha-anchor")))
+#        action =  ActionChains(proxy);
+#        human_like_mouse_move(action, check_box)
+#        check_box.click()
+#        
+#        proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[1])
+#        EL = WebDriverWait(proxy, 3000).until(EC.visibility_of_element_located((By.ID, 'recaptcha-verify-button')))
+#        print (EL) 
+#        #proxy.switch_to.frame(proxy.find_elements_by_tag_name("iframe")[2]) 
+#        proxy.execute_script = ("""
+#(function(xhr) {
+#    var send = XMLHttpRequest.prototype.send;
+#    xhr.prototype.send = function() {
+#       console.log("SEND");
+#       send.apply(this, arguments);
+#    };
+
+#    var open = XMLHttpRequest.prototype.open;
+#    xhr.prototype.open = function() {
+
+#       console.log("OPEN")
+#       open.apply(this, arguments);
+#    };
+
+#})(XMLHttpRequest);
+#                    console.log("OPEN")""")          
+#        
+#                               
+#        EL = WebDriverWait(proxy, 3000).until(EC.presence_of_element_located((By.ID, 'div_stop_new')))
+#        VG = proxy.execute_script("""var OPR = parent.document.getElementById('g-recaptcha-response'); 
+#                                     return OPR.value""")
+#        proxy.execute_script("window.stop();")
+#        print (VG, "STOP")
 #        #proxy.close()
-#        #proxy.switch_to.window(browser.window_handles[0])
+#        proxy.switch_to.window(browser.window_handles[0])
+#        g_response = proxy.find_elements_by_xpath('//textarea[@class="g-recaptcha-response"]')[0]
+#        proxy.execute_script("""arguments[0].style.display = 'block';
+#                                arguments[0].innerHTML = arguments[1];
+#                                """, g_response, VG)
+#        print ("END")        
         
-        #
-        #proxy.execute_script("window.open(window.location.href);")      
-        #proxy.execute_script("document.getElementById('captcha-form').submit();")        
-        #proxy.execute_script("var submitCallback = function(response) {console.log('OK');};", g_response)
+#        proxy.execute_script("window.open(window.location.href);")      
+#        proxy.execute_script("document.getElementById('captcha-form').submit();")        
+#        proxy.execute_script("var submitCallback = function(response) {console.log('OK');};", g_response)
         
 ####--------------------------------------------------------------------->        
         
@@ -250,3 +334,4 @@ if __name__ == "__main__":
 # в другую вставляю
 # Повесил одно событие
 #https://www.google.com/recaptcha/api2/userverify
+#https://iqss.github.io/dss-webscrape/filling-in-web-forms.html
